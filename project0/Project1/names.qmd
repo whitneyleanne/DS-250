@@ -1,0 +1,70 @@
+---
+title: "Project 1"
+subtitle: "DS 250"
+author: "Whitney Hansen"
+format:
+  html:
+    
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 3
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+---
+
+```{python}
+import pandas as pd
+import altair as alt
+
+```
+
+```{python}
+url = "https://github.com/byuidatascience/data4names/raw/master/data-raw/names_year/names_year.csv"
+names = pd.read_csv(url)
+```
+
+```{python}
+
+nm1 = ["Fred", "John", "Peter", "Alex"]
+new_data = (names.query(names in 'nm1')
+)
+```
+
+```{python}
+chart = (alt.Chart(data=new_data)
+  .encode(
+    x = "year",
+    y = "total",
+    color = "name"
+    )
+  .mark_circle()
+  )
+
+chart1.mark_line
+```
+
+```{python}
+chart2 = alt.Chart(data = new.data).encode(
+    x = alt.X("year", axis = alt.Axis(title = "Year", format="d")),
+    y = alt.Y("Total", axis = alt.Axis(title = "Popularity of Name")),
+    color = alt.Color('name')
+).properties(title= "Title of the Chart")
+
+chart2.mark_line() + chart2.mark_circle()
+chart2.mark_circle().configure.legend(
+    labelColor="Label Name"
+)
+```
+
+
