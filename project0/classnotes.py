@@ -47,4 +47,3 @@ grouped = cars.groupby("cyl").agg(
     total_wt = ("wt", np.sum)
 ).reset_index()
 # %%
-dskf

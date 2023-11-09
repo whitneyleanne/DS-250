@@ -25,3 +25,5 @@ pd.read_sql_query("""
 # %%
 type = tables
 # %%
+## for coding challenge, cheat sheet is important (make one!)
+## altair library
