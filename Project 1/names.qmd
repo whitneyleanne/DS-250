@@ -93,7 +93,7 @@ __If you talked to someone named Brittany on the phone, what is your guess of hi
 _If I talked to someone on the phone named 'Brittany', I would assume they were between 28 and 38 years old, based on this data. I wouldn't think they were older than 44 or younger than 23 years old._
 
 ```{python}
-#| label: Q2: If you talked to someone named Brittany on the phone, what is your guess of his or her age? What ages would you not guess?
+# label: Q2: If you talked to someone named Brittany on the phone, what is your guess of his or her age? What ages would you not guess?
 
 # Filtered for the name "Brittany"
 brittany_data = names[names['name'] == 'Brittany']
@@ -125,7 +125,7 @@ _Paul has a similar trend, peaking in the mid-50's and then steadily declining._
 _What I gathered from looking at all of these charts and analyzing the trends is that biblical names were on the rise in the 20's, peaked in the 50's, and declined pretty rapidly afterwards._
 
 ```{python}
-#| label: Q3: Mary, Martha, Peter, and Paul are all Christian names. From 1920 - 2000, compare the name usage of each of the four names. What trends do you notice?
+# label: Q3: Mary, Martha, Peter, and Paul are all Christian names. From 1920 - 2000, compare the name usage of each of the four names. What trends do you notice?
 
 def create_name_trend_chart(names, name, start_year, end_year):
     name_data = names[(names['name'] == name) & (names['year'] >= start_year) & (names['year'] <= end_year)]
@@ -157,7 +157,7 @@ _I added three red dotted lines to show release dates. 1977 for the first Star W
 _What I gathered from this is that the name Leia did have growth trends after each Star Wars movie was released. It is a pretty unique name, and Leia is a cool character so it is understandable that parents would name their daughters that._
 
 ```{python}
-#| label: Q4: Think of a unique name from a famous movie. Plot the usage of that name and see how changes line up with the movie release. Does it look like the movie had an effect on usage?
+# label: Q4: Think of a unique name from a famous movie. Plot the usage of that name and see how changes line up with the movie release. Does it look like the movie had an effect on usage?
 
 leia_data = names[names['name'] == 'Leia']
 
