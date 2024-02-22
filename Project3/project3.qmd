@@ -1,0 +1,162 @@
+---
+title: "Client Report - Lahmans Baseball"
+subtitle: "Course DS 250"
+author: "Whitney Hansen"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 3
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+execute: 
+  warning: false
+    
+---
+
+```{python}
+#| label: libraries
+#| include: false
+import pandas as pd
+import sqlite3
+import plotly.express as px
+
+db_path = r"C:\Users\whitn\OneDrive\Documents\DS 250 Data\DS-250\DS-250\Project3\lahmansbaseballdb.sqlite"
+con = sqlite3.connect(db_path)
+
+```
+
+
+## Elevator pitch
+
+_It is interesting to analyze baseball trends because it allows us to uncover hidden patterns and give us valuable insights. In this project, I aim to look deeper at player performances, team strategies, and historical trends using SQL queries and visual analyses._
+_Some key highlights in my first query is a look at the impact of academic background on professional achievements. I focused on baseball players from BYU-Idaho, looking specifically at players, their salaries, and their team performances._
+_In the second query, We focused on batting averages, starting at one at-bat in a year, then narrowing to 10+, and finally ending with 100+ at-bats. This allows us to see consistency of players throughout their careers._
+_Finally, I compared average home runs per player for two different teams - the St. Louis Cardinals and the New York Yankees._
+
+
+
+## QUESTION|TASK 1
+
+__Write an SQL query to create a new dataframe about baseball players who attended BYU-Idaho. The new table should contain five columns: playerID, schoolID, salary, and the yearID/teamID associated with each salary. Order the table by salary (highest to lowest) and print out the table in your report.__
+
+
+```{python}
+# Write an SQL query to create a new dataframe about baseball players who attended BYU-Idaho. The new table should contain five columns: playerID, schoolID, salary, and the yearID/teamID associated with each salary. Order the table by salary (highest to lowest) and print out the table in your report
+
+byui_salary = pd.read_sql_query("""SELECT DISTINCT s.salary, s.playerID, s.yearID, cp.schoolID
+FROM salaries s, CollegePlaying cp
+ON cp.playerID = s.playerID
+WHERE cp.playerID = s.playerID and schoolID = 'idbyuid'
+ORDER BY salary DESC;
+""", con)
+byui_salary
+
+```
+
+_This table shows a descending salary list of players from BYU-Idaho and the years they made that money. There are two players that show up, stephga01 and lindsma01._
+
+
+## QUESTION|TASK 2
+
+__Write an SQL query that provides playerID, yearID, and batting average for players with at least 1 at bat that year. Sort the table from highest batting average to lowest, and then by playerid alphabetically. Show the top 5 results in your report.__
+
+__Use the same query as above, but only include players with at least 10 at bats that year. Print the top 5 results.__
+
+__Now calculate the batting average for players over their entire careers (all years combined). Only include players with at least 100 at bats, and print the top 5 results.__
+
+_Answer._
+
+```{python}
+# label: Q2: Write an SQL query that provides playerID, yearID, and batting average for players with at least 1 at bat that year. Sort the table from highest batting average to lowest, and then by playerid alphabetically. Show the top 5 results in your report.
+dfbatting = pd.read_sql_query("""
+SELECT playerID, yearID, 1.0*H / AB as batting_average, AB, H
+FROM batting
+WHERE AB >= 1
+ORDER BY batting_average DESC, playerID
+LIMIT 5
+""", con)
+dfbatting
+```
+
+_This list shows, in alphabetical order, the first 5 players with a batting overage of at least one._
+
+```{python}
+#Use the same query as above, but only include players with at least 10 at bats that year. Print the top 5 results.
+dfbatting2 = pd.read_sql_query("""
+SELECT playerID, yearID, 1.0 * SUM(H) / SUM(AB) as batting_average, SUM(AB) as AB, SUM(H) as H
+FROM batting
+WHERE AB >= 10
+GROUP BY playerID, yearID
+ORDER BY batting_average DESC, playerID
+LIMIT 5;
+""", con)
+dfbatting2
+```
+
+_This query has the batting average of players thay have at least 10 bats that year. It is ordered in descent for batting average._
+
+```{python}
+#Now calculate the batting average for players over their entire careers (all years combined). Only include players with at least 100 at bats, and print the top 5 results.
+dfbatting3 = pd.read_sql_query("""
+SELECT playerID, (1.0 * SUM(H) / SUM(AB)) AS bat_average
+FROM batting
+GROUP BY playerID
+HAVING SUM(AB) >= 100
+ORDER BY bat_average DESC, playerID
+LIMIT 5
+""", con)
+dfbatting3
+
+```
+
+_This query shows 5 players with the highest batting average that also have at least 100+ bats over their career._
+
+_explains._
+
+## QUESTION|TASK 3
+
+__Pick any two baseball teams and compare them using a metric of your choice (average salary, home runs, number of wins, etc). Write an SQL query to get the data you need, then make a graph using Plotly Express to visualize the comparison.__
+
+_I chose the New York Yankees and the St. Louis Cardinals, mainly because I actually know those teams. I wanted to look at their average home runs per player over the years to see if there was a trend._
+
+```{python}
+# label: Q3: Pick any two baseball teams and compare them using a metric of your choice (average salary, home runs, number of wins, etc). Write an SQL query to get the data you need, then make a graph using Plotly Express to visualize the comparison. 
+
+dfbattingteam = pd.read_sql_query("""
+SELECT teamID, yearID, SUM(HR) AS total_home_runs, COUNT(DISTINCT playerID) AS players, 
+       SUM(HR)/COUNT(DISTINCT playerID) AS avg_home_runs_per_player
+FROM batting
+WHERE teamID IN ('NYA', 'SLN')
+GROUP BY teamID, yearID
+ORDER BY teamID, yearID;
+""", con)
+
+print(dfbattingteam)
+
+import plotly.express as px
+
+fig = px.scatter(dfbattingteam, x='yearID', y='avg_home_runs_per_player', color='teamID',
+title='Average Home Runs Per Player Over the Years: NY Yankees vs. St. Louis Cardinals',
+labels={'yearID': 'Year', 'avg_home_runs_per_player': 'Avg Home Runs/Player'},
+hover_data=['teamID', 'total_home_runs', 'players'])
+
+
+fig.show()
+
+```
+
+_The chart shows a scatterplot of the relationship between the average home runs per player in different years, colored by red (SLN) and blue(NYA). The chart shows that the New York Yankees had a higher batting average from approximately ~1925 to ~1990. The Cardinals are much more consistent. What we can learn from this is the Yankees had more home runs on average per player than the Cardinals for much of history._
+
+
