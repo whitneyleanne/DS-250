@@ -1,10 +1,9 @@
 ---
-title: "Project 0"
-subtitle: "DS 250"
+title: "Client Report - Project 0"
+subtitle: "Course DS 250"
 author: "Whitney Hansen"
 format:
   html:
-    
     self-contained: true
     page-layout: full
     title-block-banner: true
@@ -21,35 +20,87 @@ format:
         source: false
         toggle: true
         caption: See code
+execute: 
+  warning: false
+    
 ---
 
 ```{python}
+#| label: libraries
+#| include: false
 import pandas as pd
-import altair as alt
-
-```
-
-```{python}
-mpg = mpg = pd.read_csv("https://raw.githubusercontent.com/byuidatascience/data4python4ds/master/data-raw/mpg/mpg.csv")
-
+import numpy as np
+import plotly.express as px
 ```
 
 
+## Elevator pitch
+_A SHORT (2-3 SENTENCES) PARAGRAPH THAT `DESCRIBES KEY INSIGHTS` TAKEN FROM METRICS IN THE PROJECT RESULTS THINK TOP OR MOST IMPORTANT RESULTS._
+
+__Highlight the Questions and Tasks__
+
+## Question|Task 1
+
+__Finish the readings, setup, and be prepared with any questions to get your environment working smoothly (class for on-campus and Slack for online)__
+
+
 
 ```{python}
-print(mpg
-  .head(5)
-  .filter(["manufacturer", "model","year", "hwy"])
-  .to_markdown(index=False))
+#| label: Q1
+#| code-summary: Read and format data
+# No code needed for this task. Was completed.
+
+
+```
+
+## Question|Task 2
+
+__In VS Code, create the example chart from section 3.2.2 of the textbook. (Note: you will be using Plotly Express to display the chart instead of Altair which is used in the book)__
+
+- _include figures in chunks and discuss your findings in the figure._
+
+```{python}
+#| label: Q1-chart
+#| code-summary: plot example
+#| fig-cap: "My useless chart"
+#| fig-align: center
+# Include and execute your code here
+
+import pandas as pd
+import plotly.express as px
+url = "https://raw.githubusercontent.com/byuidatascience/data4python4ds/master/data-raw/mpg/mpg.csv" 
+mpg = pd.read_csv(url)
 ```
 
 ```{python}
+chart = (px.scatter(mpg,  x="displ", y="hwy"))
 
-chart = (alt.Chart(mpg)
-  .encode(
-    x='displ', 
-    y='hwy')
-  .mark_circle()
+print(chart)
+
+```
+
+## Question|Task 3
+
+__COPY PASTE QUESTION|TASK 3 FROM THE PROJECT HERE__
+
+- _PROVIDE TABLES THAT HELP ADDRESS THE QUESTIONS AND TASKS (IF APPLICABLE)._
+
+```{python}
+#| label: Q1-table
+#| code-summary: table example
+#| tbl-cap: "table example"
+#| tbl-cap-location: top
+# Include and execute your code here
+mydat = (df.head(1000)
+    .groupby('manufacturer')
+    .sum()
+    .reset_index()
+    .tail(10)
+    .filter(["manufacturer","displ","cty", "hwy"])
 )
-chart
+
+display(mydat)
+
 ```
+
+
