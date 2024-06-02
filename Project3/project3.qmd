@@ -1,6 +1,6 @@
 ---
 title: "Client Report - Lahmans Baseball"
-subtitle: "Course DS 250"
+subtitle: "DS 250"
 author: "Whitney Hansen"
 format:
   html:

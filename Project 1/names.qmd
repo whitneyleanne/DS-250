@@ -181,3 +181,23 @@ else:
 
 ```
 
+```{python}
+# Label: Q3: Mary, Martha, Peter, and Paul are all Christian names. From 1920 - 2000, compare the name usage of each of the four names. What trends do you notice?
+
+# Filter data for the selected names within the specified years
+filtered_names = names[(names['name'].isin(['Mary', 'Martha', 'Peter', 'Paul'])) & 
+                       (names['year'] >= 1920) & (names['year'] <= 2000)]
+
+# Create a line chart for the historical usage of the names
+combined_chart = alt.Chart(filtered_names).mark_line(point=True).encode(
+    x=alt.X('year:O', title='Year', axis=alt.Axis(format='', labelAngle=-45)), 
+    y=alt.Y('Total:Q', title='Number of Occurrences'),
+    color='name:N',
+    tooltip=['year', 'Total', 'name']
+).properties(
+    title='Popularity of the Names Mary, Martha, Peter, and Paul from 1920 to 2000'
+)
+
+combined_chart.display()
+
+```
